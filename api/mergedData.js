@@ -7,11 +7,11 @@ const viewBookDetails = async (firebaseKey) => {
   return { ...bookObject, authorObject };
 };
 
-const viewAuthorDetails = async (firebaseKey) => {
-  const authorObject = await getSingleAuthor(firebaseKey);
-  const booksArray = await getAuthorBooks(firebaseKey);
-  return { ...authorObject, booksArray };
-};
+// const viewAuthorDetails = async (firebaseKey) => {
+//   const authorObject = await getSingleAuthor(firebaseKey);
+//   const booksArray = await getAuthorBooks(firebaseKey);
+//   return { ...authorObject, booksArray };
+// };
 
 const deleteAuthorBooks = (firbaseKey) => new Promise((resolve, reject) => {
   getAuthorBooks(firbaseKey).then((authorBooksArray) => {
@@ -34,12 +34,12 @@ const deleteAuthorBooks = (firbaseKey) => new Promise((resolve, reject) => {
 //     }).catch((error) => reject(error));
 // });
 
-// const viewAuthorDetails = (authorFirebaseKey) => new Promise((resolve, reject) => {
-//   Promise.all([getSingleAuthor(authorFirebaseKey), getAuthorBooks(authorFirebaseKey)])
-//     .then(([authorObject, authorBooksArray]) => {
-//       resolve({ ...authorObject, books: authorBooksArray });
-//     }).catch((error) => reject(error));
-// });
+const viewAuthorDetails = (authorFirebaseKey) => new Promise((resolve, reject) => {
+  Promise.all([getSingleAuthor(authorFirebaseKey), getAuthorBooks(authorFirebaseKey)])
+    .then(([authorObject, authorBooksArray]) => {
+      resolve({ ...authorObject, books: authorBooksArray });
+    }).catch((error) => reject(error));
+});
 
 // const deleteAuthorBooks = (authorId) => new Promise((resolve, reject) => {
 //   getAuthorBooks(authorId).then((booksArray) => {
