@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -18,24 +18,32 @@ export default function AuthorForm({ obj }) {
   const { user } = useAuth();
   const router = useRouter();
 
+  useEffect(() => {
+    if (obj.firebaseKey) setFormInput(obj);
+  }, [obj]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormInput((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    console.warn(formInput);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = { ...formInput, uid: user.uid };
-    createAuthor(payload).then(({ name }) => {
-      const patchPayload = { firebaseKey: name };
-      updateAuthor(patchPayload).then(() => {
-        router.push('/authors');
+    if (obj.firebaseKey) {
+      updateAuthor(formInput)
+        .then(() => router.push(`/author/${obj.firebaseKey}`));
+    } else {
+      const payload = { ...formInput, uid: user.uid };
+      createAuthor(payload).then(({ name }) => {
+        const patchPayload = { firebaseKey: name };
+        updateAuthor(patchPayload).then(() => {
+          router.push('/authors');
+        });
       });
-    });
+    }
   };
 
   return (
