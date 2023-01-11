@@ -101,10 +101,10 @@ const updateBook = (payload) => new Promise((resolve, reject) => {
 // });
 
 // const createBook = (bookObj) => new Promise((resolve, reject) => {
-//   axios.post(`${dbUrl}/books.json`, bookObj)
+//   axios.post(`${endpoint}/books.json`, bookObj)
 //     .then((response) => {
 //       const payload = { firebaseKey: response.data.name };
-//       axios.patch(`${dbUrl}/books/${response.data.name}.json`, payload)
+//       axios.patch(`${endpoint}/books/${response.data.name}.json`, payload)
 //         .then(resolve);
 //     }).catch(reject);
 // });
