@@ -1,18 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../utils/context/authContext';
+import { createAuthor, updateAuthor } from '../../api/authorData';
 
-export default function AuthorForm() {
+const initialState = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  image: '',
+  favorite: false,
+};
+
+export default function AuthorForm({ obj }) {
+  const [formInput, setFormInput] = useState(initialState);
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    console.warn(formInput);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const payload = { ...formInput, uid: user.uid };
+    createAuthor(payload).then(({ name }) => {
+      const patchPayload = { firebaseKey: name };
+      updateAuthor(patchPayload).then(() => {
+        router.push('/authors');
+      });
+    });
+  };
+
   return (
-    <Form>
-      <h2 className="text-white mt-5">Author</h2>
+    <Form onSubmit={handleSubmit}>
+      <h2 className="text-white mt-5">{obj.firebaseKey ? 'Edit' : 'Add'} Author</h2>
       {/* FIRST NAME INPUT  */}
       <FloatingLabel controlId="floatingInput1" label="First Name" className="mb-3">
         <Form.Control
           type="text"
           placeholder="Enter First Name"
-          name="first-name"
-          // value={formInput.title}
-          // onChange={handleChange}
+          name="first_name"
+          value={formInput.first_name}
+          onChange={handleChange}
           required
         />
       </FloatingLabel>
@@ -21,9 +57,9 @@ export default function AuthorForm() {
         <Form.Control
           type="text"
           placeholder="Enter Last Name"
-          name="last-name"
-          // value={formInput.title}
-          // onChange={handleChange}
+          name="last_name"
+          value={formInput.last_name}
+          onChange={handleChange}
           required
         />
       </FloatingLabel>
@@ -33,8 +69,8 @@ export default function AuthorForm() {
           type="email"
           placeholder="Enter Email"
           name="email"
-          // value={formInput.title}
-          // onChange={handleChange}
+          value={formInput.email}
+          onChange={handleChange}
           required
         />
       </FloatingLabel>
@@ -43,9 +79,9 @@ export default function AuthorForm() {
         <Form.Control
           type="url"
           placeholder="Enter Image URL"
-          name="image-url"
-          // value={formInput.title}
-          // onChange={handleChange}
+          name="image"
+          value={formInput.image}
+          onChange={handleChange}
           required
         />
       </FloatingLabel>
@@ -57,16 +93,31 @@ export default function AuthorForm() {
         id="favorite"
         name="favorite"
         label="Favorite?"
-      // checked={formInput.sale}
-      // onChange={(e) => {
-      //   setFormInput((prevState) => ({
-      //     ...prevState,
-      //     sale: e.target.checked,
-      //   }));
-      // }}
+        checked={formInput.favorite}
+        onChange={(e) => {
+          setFormInput((prevState) => ({
+            ...prevState,
+            favorite: e.target.checked,
+          }));
+        }}
       />
       {/* SUBMIT BUTTON  */}
-      <Button type="submit">Author</Button>
+      <Button type="submit">{obj.firebaseKey ? 'Edit' : 'Add'} Author</Button>
     </Form>
   );
 }
+
+AuthorForm.propTypes = {
+  obj: PropTypes.shape({
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    email: PropTypes.string,
+    image: PropTypes.string,
+    favorite: PropTypes.bool,
+    firebaseKey: PropTypes.string,
+  }),
+};
+
+AuthorForm.defaultProps = {
+  obj: initialState,
+};

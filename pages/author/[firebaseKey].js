@@ -9,7 +9,6 @@ export default function ViewAuthor() {
   const router = useRouter();
   const { firebaseKey } = router.query;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const seeTheAuthorDetails = () => {
     viewAuthorDetails(firebaseKey).then(setAuthorDetails);
   };
@@ -17,7 +16,6 @@ export default function ViewAuthor() {
   useEffect(() => {
     viewAuthorDetails(firebaseKey).then(setAuthorDetails);
   }, [firebaseKey]);
-  console.warn(authorDetails.books);
 
   return (
     <>
