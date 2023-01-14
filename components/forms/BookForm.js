@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import { Button } from 'react-bootstrap';
+import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useAuth } from '../../utils/context/authContext';
 import { getAuthors } from '../../api/authorData';
 import { createBook, updateBook } from '../../api/bookData';
@@ -101,7 +99,7 @@ function BookForm({ obj }) {
               name="author_id"
               onChange={handleChange}
               className="mb-3"
-              value={formInput.author_id} // FIXME: modify code to remove error
+              value={formInput.author_id}
               required
             >
               <option value="">Select an Author</option>
@@ -157,13 +155,13 @@ function BookForm({ obj }) {
 
 BookForm.propTypes = {
   obj: PropTypes.shape({
+    author_id: PropTypes.string,
     description: PropTypes.string,
+    firebaseKey: PropTypes.string,
     image: PropTypes.string,
     price: PropTypes.string,
     sale: PropTypes.bool,
     title: PropTypes.string,
-    author_id: PropTypes.string,
-    firebaseKey: PropTypes.string,
   }),
 };
 
