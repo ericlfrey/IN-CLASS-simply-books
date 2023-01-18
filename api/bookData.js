@@ -22,6 +22,25 @@ const getBooks = (uid) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getBooksOnSale = (uid) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/books.json?orderBy="uid"&equalTo="${uid}"`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        const booksOnSale = Object.values(data).filter((item) => item.sale);
+        resolve(booksOnSale);
+      } else {
+        resolve([]);
+      }
+    })
+    .catch(reject);
+});
+
 // DELETE BOOK
 const deleteBook = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/books/${firebaseKey}.json`, {
@@ -121,4 +140,5 @@ export {
   deleteBook,
   getSingleBook,
   updateBook,
+  getBooksOnSale,
 };
